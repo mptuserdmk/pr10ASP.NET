@@ -1,0 +1,21 @@
+@model pr3withDB.Models.Role
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Изменение роли</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="IdRoles" />
+            <div class="form-group mb-3">
+                <label asp-for="RoleName" class="form-label">Название роли</label>
+                <input asp-for="RoleName" class="form-control" />
+                <span asp-validation-for="RoleName" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>

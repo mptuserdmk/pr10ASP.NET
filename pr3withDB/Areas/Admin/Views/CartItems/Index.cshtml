@@ -1,0 +1,38 @@
+@model IEnumerable<pr3withDB.Models.CartItem>
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Товары в корзинах</h2>
+<p><a asp-action="Create" class="btn btn-success">Добавить товар в корзину</a></p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Корзина №</th>
+            <th>Пользователь</th>
+            <th>Товар</th>
+            <th>Количество</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.IdCartItems</td>
+                <td>@item.CartId</td>
+                <td>@(item.Cart?.User?.UserLogin ?? "—")</td>
+                <td>@(item.Product?.ProductName ?? "—")</td>
+                <td>@item.CartItemQuantity</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdCartItems" class="btn btn-sm btn-primary">Изменить</a>
+                    <form asp-action="Delete" asp-route-id="@item.IdCartItems" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Удалить?')">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

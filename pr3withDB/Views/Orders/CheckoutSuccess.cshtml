@@ -1,0 +1,40 @@
+@model pr3withDB.Models.Order
+@{
+    ViewData["Title"] = "Заказ оформлен - Hayastan Shop";
+}
+
+<div class="container mt-5">
+    <div class="container-parchment text-center p-5">
+        <div class="text-center mb-4">
+            <!-- Pomegranate style golden ring checkmark -->
+            <div class="mb-4 d-inline-block p-3 rounded-circle" style="background-color: rgba(255, 177, 33, 0.1); border: 2px solid var(--color-apricot);">
+                <span style="font-size: 3.5rem; line-height: 1;">🌟</span>
+            </div>
+            <h1 class="display-5" style="color: var(--color-garnet);">Շնորհակալություն!</h1>
+            <h2 class="h4 text-muted">Спасибо за ваш заказ!</h2>
+            <div class="ornament-divider"></div>
+        </div>
+
+        <div class="py-3">
+            <p class="lead">
+                Ваш заказ <strong style="color: var(--color-terracotta);">#@Model.IdOrders</strong> успешно зарегистрирован.
+            </p>
+            <p class="lead">
+                Статус заказа: <span class="badge badge-category">@Model.OrderStatus</span>
+            </p>
+            
+            <div class="my-4 p-4 rounded bg-white shadow-sm d-inline-block" style="border: 1px solid var(--color-border); min-width: 280px;">
+                <span class="d-block text-muted small uppercase">Сумма к оплате</span>
+                <span class="price-text" style="font-size: 2rem; color: var(--color-garnet);">@Model.OrderTotalAmount.ToString("C")</span>
+            </div>
+
+            <p class="text-muted">Мы свяжемся с вами в ближайшее время для подтверждения доставки.</p>
+        </div>
+
+        <div class="mt-4">
+            <a asp-controller="Products" asp-action="Index" class="btn btn-armenian btn-lg px-5">
+                Вернуться в каталог
+            </a>
+        </div>
+    </div>
+</div>

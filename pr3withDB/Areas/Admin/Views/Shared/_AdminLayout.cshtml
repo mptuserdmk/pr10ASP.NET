@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - @ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Noto+Serif+Armenian:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/admin-modern.css" asp-append-version="true" />
+</head>
+<body>
+    <nav id="sidebar">
+        <div class="logo-section">
+            <h4>Admin</h4>
+            <div class="text-secondary small mt-1">Admin Dashboard</div>
+        </div>
+        <div class="nav flex-column mt-2">
+            <div class="px-3 mb-2 text-secondary small text-uppercase fw-bold" style="font-size: 0.7rem; letter-spacing: 0.1em;">Управление</div>
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Products" ? "active" : "")" asp-area="Admin" asp-controller="Products" asp-action="Index">
+                <span>📦</span> Товары
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Categories" ? "active" : "")" asp-area="Admin" asp-controller="Categories" asp-action="Index">
+                <span>📁</span> Категории
+            </a>
+            
+            <div class="px-3 mt-4 mb-2 text-secondary small text-uppercase fw-bold" style="font-size: 0.7rem; letter-spacing: 0.1em;">Продажи</div>
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Orders" ? "active" : "")" asp-area="Admin" asp-controller="Orders" asp-action="Index">
+                <span>🛒</span> Заказы
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "OrderItems" ? "active" : "")" asp-area="Admin" asp-controller="OrderItems" asp-action="Index">
+                <span>📋</span> Позиции
+            </a>
+            
+            <div class="px-3 mt-4 mb-2 text-secondary small text-uppercase fw-bold" style="font-size: 0.7rem; letter-spacing: 0.1em;">Система</div>
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Users" ? "active" : "")" asp-area="Admin" asp-controller="Users" asp-action="Index">
+                <span>👥</span> Пользователи
+            </a>
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Roles" ? "active" : "")" asp-area="Admin" asp-controller="Roles" asp-action="Index">
+                <span>🔑</span> Роли
+            </a>
+
+            <div class="mt-auto pt-5">
+                <a class="nav-link text-warning" asp-area="" asp-controller="Products" asp-action="Index">
+                    <span>⬅</span> На сайт
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div id="content">
+        <header class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary border-opacity-10">
+            <h2 class="fw-bold mb-0">@ViewData["Title"]</h2>
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-end d-none d-md-block">
+                    <div class="fw-semibold small">Администратор</div>
+                    <div class="text-secondary" style="font-size: 0.75rem;">admin@shop.com</div>
+                </div>
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 40px; height: 40px;">
+                    <span class="text-white fw-bold">A</span>
+                </div>
+            </div>
+        </header>
+
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

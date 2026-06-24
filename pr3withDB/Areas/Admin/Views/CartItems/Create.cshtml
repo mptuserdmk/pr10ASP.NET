@@ -1,0 +1,35 @@
+@model pr3withDB.Models.CartItem
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Добавить товар в корзину</h2>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group mb-3">
+                <label asp-for="CartId" class="form-label">Корзина №</label>
+                <select asp-for="CartId" asp-items="ViewBag.CartId" class="form-select">
+                    <option value="">-- Выберите корзину --</option>
+                </select>
+                <span asp-validation-for="CartId" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="ProductId" class="form-label">Товар</label>
+                <select asp-for="ProductId" asp-items="ViewBag.ProductId" class="form-select">
+                    <option value="">-- Выберите товар --</option>
+                </select>
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="CartItemQuantity" class="form-label">Количество</label>
+                <input asp-for="CartItemQuantity" class="form-control" type="number" min="1" />
+                <span asp-validation-for="CartItemQuantity" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-success">Создать</button>
+            <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>

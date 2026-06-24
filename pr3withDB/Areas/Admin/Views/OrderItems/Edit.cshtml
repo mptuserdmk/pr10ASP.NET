@@ -1,0 +1,36 @@
+@model pr3withDB.Models.OrderItem
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Изменить позицию заказа</h2>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="IdOrderItems" />
+            <div class="form-group mb-3">
+                <label asp-for="OrderId" class="form-label">Заказ №</label>
+                <select asp-for="OrderId" asp-items="ViewBag.OrderId" class="form-select">
+                    <option value="">-- Выберите заказ --</option>
+                </select>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="ProductId" class="form-label">Товар</label>
+                <select asp-for="ProductId" asp-items="ViewBag.ProductId" class="form-select">
+                    <option value="">-- Выберите товар --</option>
+                </select>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="OrderItemQuantity" class="form-label">Количество</label>
+                <input asp-for="OrderItemQuantity" class="form-control" type="number" min="1" />
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="OrderItemPriceAtPurchase" class="form-label">Цена при покупке</label>
+                <input asp-for="OrderItemPriceAtPurchase" class="form-control" type="number" step="0.01" />
+            </div>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+@model pr3withDB.Models.Cart
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Корзина #@Model.IdCarts</h2>
+<hr />
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-4">Пользователь:</dt>
+            <dd class="col-sm-8">@(Model.User?.UserLogin ?? "—")</dd>
+
+            <dt class="col-sm-4">Дата создания:</dt>
+            <dd class="col-sm-8">@Model.CartCreatedAt.ToString("dd.MM.yyyy HH:mm")</dd>
+        </dl>
+    </div>
+</div>
+
+<h4>Товары в корзине</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Товар</th>
+            <th>Количество</th>
+            <th>Цена</th>
+            <th>Сумма</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.CartItems)
+        {
+            <tr>
+                <td>@(item.Product?.ProductName ?? "Удалён")</td>
+                <td>@item.CartItemQuantity</td>
+                <td>@(item.Product?.ProductPrice.ToString("N2") ?? "—") ₽</td>
+                <td>@((item.CartItemQuantity * (item.Product?.ProductPrice ?? 0)).ToString("N2")) ₽</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary">← Назад к корзинам</a>

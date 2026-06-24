@@ -1,0 +1,36 @@
+@model IEnumerable<pr3withDB.Models.User>
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Управление пользователями</h2>
+<p><a asp-action="Create" class="btn btn-success">Добавить пользователя</a></p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Логин</th>
+            <th>Роль</th>
+            <th>Дата регистрации</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.IdUsers</td>
+                <td>@item.UserLogin</td>
+                <td>@(item.Role?.RoleName ?? "—")</td>
+                <td>@item.UserCreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdUsers" class="btn btn-sm btn-primary">Изменить</a>
+                    <form asp-action="Delete" asp-route-id="@item.IdUsers" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Удалить пользователя?')">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

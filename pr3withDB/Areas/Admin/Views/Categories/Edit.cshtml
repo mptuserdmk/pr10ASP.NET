@@ -1,0 +1,27 @@
+@model pr3withDB.Models.Category
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Изменение категории</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="IdCategories" />
+            <div class="form-group mb-3">
+                <label asp-for="CategoryName" class="form-label">Название категории</label>
+                <input asp-for="CategoryName" class="form-control" />
+                <span asp-validation-for="CategoryName" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="CategoryDescription" class="form-label">Описание</label>
+                <input asp-for="CategoryDescription" class="form-control" />
+                <span asp-validation-for="CategoryDescription" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>

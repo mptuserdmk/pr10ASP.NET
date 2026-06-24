@@ -1,0 +1,236 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Noto+Serif+Armenian:wght@400;700&display=swap');
+
+:root {
+    --color-terracotta: #A24835;
+    --color-garnet: #811331;
+    --color-apricot: #FFB121;
+    --color-apricot-hover: #E09810;
+    --color-parchment: #FAF6EE;
+    --color-card-bg: #FFFDF9;
+    --color-text-dark: #3A2312;
+    --color-text-muted: #6B5542;
+    --color-text-light: #FAF6EE;
+    --color-border: rgba(162, 72, 53, 0.22);
+    --font-headers: 'Cinzel', serif;
+    --font-body: 'Lora', 'Noto Serif Armenian', serif;
+}
+
+body {
+    background-color: var(--color-parchment);
+    color: var(--color-text-dark);
+    font-family: var(--font-body);
+    line-height: 1.6;
+}
+
+/* Elegant serif typography for headings */
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+    font-family: var(--font-headers);
+    color: var(--color-garnet);
+    font-weight: 700;
+}
+
+/* Woven Armenian Ornament Separator (plait SVG) */
+.ornament-divider {
+    height: 24px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20" width="100" height="20" fill="none" stroke="%23A24835" stroke-width="1.8"><path d="M 0,10 Q 12.5,0 25,10 T 50,10 T 75,10 T 100,10 M 0,10 Q 12.5,20 25,10 T 50,10 T 75,10 T 100,10" /><circle cx="25" cy="10" r="2.2" fill="%23FFB121" stroke="none" /><circle cx="75" cy="10" r="2.2" fill="%23FFB121" stroke="none" /></svg>');
+    background-repeat: repeat-x;
+    background-size: contain;
+    border: none;
+    margin: 2.2rem auto;
+    width: 100%;
+    opacity: 0.85;
+}
+
+/* Elegant Terracotta Navbar */
+.navbar-armenian {
+    background: linear-gradient(135deg, var(--color-garnet) 0%, var(--color-terracotta) 100%);
+    border-bottom: 4px solid var(--color-apricot);
+    box-shadow: 0 4px 15px rgba(129, 19, 49, 0.15);
+}
+
+.navbar-armenian .navbar-brand {
+    color: var(--color-apricot) !important;
+    font-size: 1.7rem;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+}
+
+.navbar-armenian .nav-link {
+    color: rgba(250, 246, 238, 0.9) !important;
+    font-size: 1.05rem;
+    font-weight: 500;
+    transition: all 0.25s ease;
+    margin-right: 8px;
+}
+
+.navbar-armenian .nav-link:hover {
+    color: var(--color-apricot) !important;
+    transform: translateY(-1px);
+}
+
+.navbar-armenian .btn-outline-light {
+    border-color: rgba(250, 246, 238, 0.6);
+    color: var(--color-parchment);
+    font-family: var(--font-body);
+}
+
+.navbar-armenian .btn-outline-light:hover {
+    background-color: var(--color-parchment);
+    color: var(--color-garnet);
+    border-color: var(--color-parchment);
+}
+
+/* Beautiful Catalog Card Styling */
+.card-armenian {
+    background-color: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow: 0 5px 18px rgba(162, 72, 53, 0.05);
+    transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow: hidden;
+}
+
+.card-armenian:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(162, 72, 53, 0.12);
+    border-color: var(--color-apricot);
+}
+
+.card-armenian .card-img-top {
+    border-bottom: 2px solid var(--color-border);
+    transition: transform 0.5s ease;
+}
+
+.card-armenian:hover .card-img-top {
+    transform: scale(1.03);
+}
+
+.card-armenian .badge-category {
+    background-color: var(--color-terracotta);
+    color: var(--color-text-light);
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--color-apricot);
+}
+
+.card-armenian .card-title {
+    color: var(--color-garnet);
+    font-size: 1.25rem;
+    margin-top: 8px;
+    font-family: var(--font-headers);
+}
+
+.card-armenian .card-text {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+}
+
+.card-armenian .price-text {
+    font-family: var(--font-headers);
+    color: var(--color-terracotta);
+    font-weight: 700;
+    font-size: 1.35rem;
+}
+
+/* Armenian Glowing Button Layout */
+.btn-armenian {
+    background: linear-gradient(135deg, var(--color-terracotta) 0%, var(--color-garnet) 100%);
+    color: var(--color-text-light) !important;
+    border: 1px solid var(--color-apricot);
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-weight: 600;
+    font-size: 0.98rem;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 6px rgba(129, 19, 49, 0.2);
+}
+
+.btn-armenian:hover {
+    background: linear-gradient(135deg, var(--color-garnet) 0%, #610B22 100%);
+    box-shadow: 0 0 14px rgba(255, 177, 33, 0.45);
+    transform: scale(1.03);
+    border-color: #FFF;
+}
+
+/* Secondary Golden Apricot Button */
+.btn-apricot {
+    background-color: var(--color-apricot);
+    color: var(--color-text-dark) !important;
+    border: 1px solid rgba(162, 72, 53, 0.3);
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-apricot:hover {
+    background-color: var(--color-apricot-hover);
+    box-shadow: 0 4px 10px rgba(255, 177, 33, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Custom form inputs styling */
+.form-armenian {
+    background-color: #FFFDF9;
+    border: 1.5px solid var(--color-border);
+    color: var(--color-text-dark);
+    border-radius: 8px;
+    font-family: var(--font-body);
+}
+
+.form-armenian:focus {
+    background-color: #FFFDF9;
+    border-color: var(--color-terracotta);
+    box-shadow: 0 0 0 0.25rem rgba(162, 72, 53, 0.15);
+    color: var(--color-text-dark);
+}
+
+/* Armenian Themed Table & Containers */
+.container-parchment {
+    background-color: #FFFDF9;
+    border: 1.5px solid var(--color-border);
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(162, 72, 53, 0.04);
+    padding: 30px;
+}
+
+.table-armenian {
+    color: var(--color-text-dark);
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-armenian th {
+    font-family: var(--font-headers);
+    color: var(--color-garnet);
+    border-bottom: 2px solid var(--color-terracotta) !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    padding: 14px;
+}
+
+.table-armenian td {
+    padding: 16px 14px;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+}
+
+.table-armenian tr:last-child td {
+    border-bottom: none;
+}
+
+/* Silhouette decoration */
+.header-ornament-svg {
+    height: 38px;
+    margin-right: 12px;
+    fill: var(--color-apricot);
+    filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.3));
+}

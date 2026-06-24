@@ -1,0 +1,32 @@
+@model pr3withDB.Models.CartItem
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Изменить товар в корзине</h2>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="IdCartItems" />
+            <div class="form-group mb-3">
+                <label asp-for="CartId" class="form-label">Корзина №</label>
+                <select asp-for="CartId" asp-items="ViewBag.CartId" class="form-select">
+                    <option value="">-- Выберите корзину --</option>
+                </select>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="ProductId" class="form-label">Товар</label>
+                <select asp-for="ProductId" asp-items="ViewBag.ProductId" class="form-select">
+                    <option value="">-- Выберите товар --</option>
+                </select>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="CartItemQuantity" class="form-label">Количество</label>
+                <input asp-for="CartItemQuantity" class="form-control" type="number" min="1" />
+            </div>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+@model pr3withDB.Models.Cart
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Редактирование корзины</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="IdCarts" />
+
+            <div class="form-group mb-3">
+                <label asp-for="UserId" class="form-label">Пользователь</label>
+                <select asp-for="UserId" asp-items="ViewBag.UserId" class="form-select"></select>
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="CartCreatedAt" class="form-label">Дата создания</label>
+                <input asp-for="CartCreatedAt" class="form-control" type="datetime-local" />
+                <span asp-validation-for="CartCreatedAt" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>

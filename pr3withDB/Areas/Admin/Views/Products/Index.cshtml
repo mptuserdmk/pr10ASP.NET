@@ -1,0 +1,34 @@
+﻿@model IEnumerable<pr3withDB.Models.Product>
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Управление товарами</h2>
+<p><a asp-action="Create" class="btn btn-success">Добавить товар</a></p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Цена</th>
+            <th>Категория</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>@item.ProductPrice.ToString("C")</td>
+                <td>@(item.Category?.CategoryName ?? "Нет")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdProducts" class="btn btn-sm btn-primary">Изменить</a>
+                    <form asp-action="Delete" asp-route-id="@item.IdProducts" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Удалить?')">🗑</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

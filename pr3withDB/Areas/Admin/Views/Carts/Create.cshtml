@@ -1,0 +1,22 @@
+@model pr3withDB.Models.Cart
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Создание корзины</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group mb-3">
+                <label asp-for="UserId" class="form-label">Пользователь</label>
+                <select asp-for="UserId" asp-items="ViewBag.UserId" class="form-select">
+                    <option value="">-- Выберите пользователя --</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success">Создать</button>
+            <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>

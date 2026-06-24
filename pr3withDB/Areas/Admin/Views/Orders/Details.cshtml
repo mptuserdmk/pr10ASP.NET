@@ -1,0 +1,50 @@
+@model pr3withDB.Models.Order
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Детали заказа #@Model.IdOrders</h2>
+<hr />
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-4">Пользователь:</dt>
+            <dd class="col-sm-8">@(Model.User?.UserLogin ?? "—")</dd>
+
+            <dt class="col-sm-4">Дата:</dt>
+            <dd class="col-sm-8">@Model.OrderDate.ToString("dd.MM.yyyy HH:mm")</dd>
+
+            <dt class="col-sm-4">Статус:</dt>
+            <dd class="col-sm-8">@Model.OrderStatus</dd>
+
+            <dt class="col-sm-4">Общая сумма:</dt>
+            <dd class="col-sm-8"><strong>@Model.OrderTotalAmount.ToString("N2") ₽</strong></dd>
+        </dl>
+    </div>
+</div>
+
+<h4>Позиции заказа</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Товар</th>
+            <th>Количество</th>
+            <th>Цена при покупке</th>
+            <th>Сумма</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderItems)
+        {
+            <tr>
+                <td>@(item.Product?.ProductName ?? "Удалён")</td>
+                <td>@item.OrderItemQuantity</td>
+                <td>@item.OrderItemPriceAtPurchase.ToString("N2") ₽</td>
+                <td>@((item.OrderItemQuantity * item.OrderItemPriceAtPurchase).ToString("N2")) ₽</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary">← Назад к заказам</a>

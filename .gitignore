@@ -1,0 +1,34 @@
+## Ignore Visual Studio temporary files, build results, and user-specific settings
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Re]leases/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bi]n/
+[Oo]bj/
+[Log]s/
+[Ff]ormats/
+
+# Visual Studio cache directory
+.vs/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.usermd
+*.username
+*.userprefs
+
+# ASP.NET Core secrets and configurations
+appsettings.Development.json
+UserSecrets/
+secrets.json
+
+# Local History for Visual Studio Code
+.history/
