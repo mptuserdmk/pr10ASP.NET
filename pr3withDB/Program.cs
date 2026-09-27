@@ -8,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+// Swagger / OpenAPI
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 //    
 builder.Services.AddDbContext<ShopDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -103,11 +107,22 @@ using (var scope = app.Services.CreateScope())
     }
     catch { }
 }
-// Middleware to force Content-Type header
+// Middleware to force Content-Type header for HTML views
 app.Use((context, next) => 
 { 
-    context.Response.Headers.ContentType = "text/html; charset=utf-8"; 
+    if (!context.Request.Path.StartsWithSegments("/api") && !context.Request.Path.StartsWithSegments("/swagger"))
+    {
+        context.Response.Headers.ContentType = "text/html; charset=utf-8"; 
+    }
     return next(); 
+});
+
+// Swagger Middleware
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Shop API v1");
+    c.RoutePrefix = "swagger";
 });
 
 //   
@@ -125,6 +140,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
+
+app.MapControllers();
 
 app.MapControllerRoute(
     name: "admin",
