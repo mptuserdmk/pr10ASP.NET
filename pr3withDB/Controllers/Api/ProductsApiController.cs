@@ -1,47 +1,54 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using pr3withDB.Common;
 using pr3withDB.DTOs;
-using pr3withDB.Models;
+using pr3withDB.Services;
 
 namespace pr3withDB.Controllers.Api;
 
+/// <summary>
+/// Тонкий API контроллер для управления товарами.
+/// Делегирует всю бизнес-логику слою сервисов (IProductService).
+/// </summary>
 [ApiController]
 [Route("api/products")]
 [Produces("application/json")]
 [AllowAnonymous]
 public class ProductsApiController : ControllerBase
 {
-    private readonly ShopDbContext _context;
+    private readonly IProductService _productService;
 
-    public ProductsApiController(ShopDbContext context)
+    public ProductsApiController(IProductService productService)
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
+        _productService = productService;
     }
 
     /// <summary>
-    /// Получение списка товаров с пагинацией и сортировкой по Id.
+    /// Получение списка товаров с пагинацией и возвратом общего количества в заголовке X-Total-Count.
     /// </summary>
     /// <param name="page">Номер страницы (по умолчанию 1).</param>
     /// <param name="pageSize">Количество элементов на странице (по умолчанию 10).</param>
-    /// <response code="200">Возвращает список товаров в формате DTO.</response>
+    /// <param name="categoryId">Фильтр по категории (опционально).</param>
+    /// <param name="search">Поисковый запрос по названию и описанию (опционально).</param>
+    /// <response code="200">Возвращает список товаров в формате DTO и заголовок X-Total-Count.</response>
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<ProductDTO>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<ProductDTO>>> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    [ProducesResponseType(typeof(IEnumerable<ProductReadDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<ProductReadDto>>> GetAll(
+        [FromQuery] int page = 1, 
+        [FromQuery] int pageSize = 10,
+        [FromQuery] int? categoryId = null,
+        [FromQuery] string? search = null)
     {
-        if (page < 1) page = 1;
-        if (pageSize < 1) pageSize = 10;
-        if (pageSize > 100) pageSize = 100;
+        var result = await _productService.GetPagedProductsAsync(page, pageSize, categoryId, search);
 
-        var products = await _context.Products
-            .AsNoTracking()
-            .OrderBy(p => p.IdProducts)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+        // Добавляем заголовок X-Total-Count и выставляем Access-Control-Expose-Headers
+        Response.Headers.Append("X-Total-Count", result.Data!.TotalCount.ToString());
+        Response.Headers.Append("Access-Control-Expose-Headers", "X-Total-Count");
 
-        var result = products.Select(ProductMapper.ToDto).ToList();
-        return Ok(result);
+        return Ok(result.Data.Items);
     }
 
     /// <summary>
@@ -51,127 +58,119 @@ public class ProductsApiController : ControllerBase
     /// <response code="200">Товар найден и возвращен в формате DTO.</response>
     /// <response code="404">Товар с указанным ID не найден.</response>
     [HttpGet("{id:int}")]
-    [ProducesResponseType(typeof(ProductDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProductReadDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ProductDTO>> GetById(int id)
+    public async Task<ActionResult<ProductReadDto>> GetById(int id)
     {
-        var product = await _context.Products
-            .AsNoTracking()
-            .FirstOrDefaultAsync(p => p.IdProducts == id);
-
-        if (product == null)
+        var result = await _productService.GetProductByIdAsync(id);
+        if (!result.IsSuccess)
         {
-            return NotFound(new { message = $"Товар с ID {id} не найден." });
+            return NotFound(new { message = result.ErrorMessage });
         }
 
-        return Ok(ProductMapper.ToDto(product));
+        return Ok(result.Data);
     }
 
     /// <summary>
     /// Создание нового товара.
     /// </summary>
-    /// <param name="dto">Данные для создания товара.</param>
-    /// <response code="201">Товар успешно создан. Возвращает созданный объект и заголовок Location.</response>
-    /// <response code="400">Ошибка валидации входных данных.</response>
+    /// <param name="dto">DTO с данными для создания товара.</param>
+    /// <response code="201">Товар успешно создан.</response>
+    /// <response code="400">Ошибка валидации переданных данных.</response>
     [HttpPost]
-    [ProducesResponseType(typeof(ProductDTO), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProductReadDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<ProductDTO>> Create([FromBody] CreateProductDTO dto)
+    public async Task<ActionResult<ProductReadDto>> Create([FromBody] ProductCreateDto dto)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        var product = ProductMapper.ToEntity(dto);
-        _context.Products.Add(product);
-        await _context.SaveChangesAsync();
+        var result = await _productService.CreateProductAsync(dto);
+        if (!result.IsSuccess)
+        {
+            return BadRequest(new { message = result.ErrorMessage });
+        }
 
-        var createdDto = ProductMapper.ToDto(product);
-        return CreatedAtAction(nameof(GetById), new { id = product.IdProducts }, createdDto);
+        return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data);
     }
 
     /// <summary>
-    /// Полное обновление товара (PUT).
+    /// Полное обновление существующего товара (PUT).
     /// </summary>
     /// <param name="id">Идентификатор товара.</param>
-    /// <param name="dto">Полные новые данные товара.</param>
+    /// <param name="dto">DTO с новыми данными товара.</param>
     /// <response code="204">Товар успешно обновлен.</response>
-    /// <response code="400">Ошибка валидации входных данных.</response>
-    /// <response code="404">Товар с указанным ID не найден.</response>
+    /// <response code="400">Ошибка валидации данных.</response>
+    /// <response code="404">Товар не найден.</response>
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Update(int id, [FromBody] UpdateProductDTO dto)
+    public async Task<IActionResult> Update(int id, [FromBody] ProductUpdateDto dto)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        var product = await _context.Products.FindAsync(id);
-        if (product == null)
+        var result = await _productService.UpdateProductAsync(id, dto);
+        if (!result.IsSuccess)
         {
-            return NotFound(new { message = $"Товар с ID {id} не найден." });
+            if (result.ErrorType == ServiceErrorType.NotFound)
+            {
+                return NotFound(new { message = result.ErrorMessage });
+            }
+            return BadRequest(new { message = result.ErrorMessage });
         }
-
-        ProductMapper.ApplyUpdate(product, dto);
-        await _context.SaveChangesAsync();
 
         return NoContent();
     }
 
     /// <summary>
-    /// Частичное обновление товара (PATCH).
+    /// Частичное обновление полей товара (PATCH).
     /// </summary>
     /// <param name="id">Идентификатор товара.</param>
-    /// <param name="dto">Поля для частичного обновления.</param>
-    /// <response code="204">Товар успешно частично обновлен.</response>
-    /// <response code="400">Ошибка валидации входных данных.</response>
-    /// <response code="404">Товар с указанным ID не найден.</response>
+    /// <param name="dto">DTO с полями для обновления.</param>
+    /// <response code="204">Товар успешно обновлен.</response>
+    /// <response code="400">Ошибка валидации.</response>
+    /// <response code="404">Товар не найден.</response>
     [HttpPatch("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Patch(int id, [FromBody] PatchProductDTO dto)
     {
-        if (!ModelState.IsValid)
+        var result = await _productService.PatchProductAsync(id, dto);
+        if (!result.IsSuccess)
         {
-            return BadRequest(ModelState);
+            if (result.ErrorType == ServiceErrorType.NotFound)
+            {
+                return NotFound(new { message = result.ErrorMessage });
+            }
+            return BadRequest(new { message = result.ErrorMessage });
         }
-
-        var product = await _context.Products.FindAsync(id);
-        if (product == null)
-        {
-            return NotFound(new { message = $"Товар с ID {id} не найден." });
-        }
-
-        ProductMapper.ApplyPatch(product, dto);
-        await _context.SaveChangesAsync();
 
         return NoContent();
     }
 
     /// <summary>
-    /// Удаление товара по идентификатору.
+    /// Удаление товара по идентификатору (DELETE).
     /// </summary>
     /// <param name="id">Идентификатор товара.</param>
     /// <response code="204">Товар успешно удален.</response>
-    /// <response code="404">Товар с указанным ID не найден.</response>
+    /// <response code="404">Товар не найден.</response>
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(int id)
     {
-        var product = await _context.Products.FindAsync(id);
-        if (product == null)
+        var result = await _productService.DeleteProductAsync(id);
+        if (!result.IsSuccess)
         {
-            return NotFound(new { message = $"Товар с ID {id} не найден." });
+            return NotFound(new { message = result.ErrorMessage });
         }
-
-        _context.Products.Remove(product);
-        await _context.SaveChangesAsync();
 
         return NoContent();
     }

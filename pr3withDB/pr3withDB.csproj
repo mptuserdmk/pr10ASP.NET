@@ -8,20 +8,13 @@
 
   <ItemGroup>
     <Compile Remove="Pages\**" />
-    <Compile Remove="Views\Новая папка1\**" />
-    <Compile Remove="Views\Новая папка\**" />
     <Content Remove="Pages\**" />
-    <Content Remove="Views\Новая папка1\**" />
-    <Content Remove="Views\Новая папка\**" />
     <EmbeddedResource Remove="Pages\**" />
-    <EmbeddedResource Remove="Views\Новая папка1\**" />
-    <EmbeddedResource Remove="Views\Новая папка\**" />
     <None Remove="Pages\**" />
-    <None Remove="Views\Новая папка1\**" />
-    <None Remove="Views\Новая папка\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.2.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -38,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Новая папка\" />
   </ItemGroup>
 
 </Project>

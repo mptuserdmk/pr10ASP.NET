@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using pr3withDB.Mapping;
 using pr3withDB.Models;
+using pr3withDB.Repositories;
+using pr3withDB.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,18 @@ builder.Services.AddRazorPages();
 // Swagger / OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// AutoMapper
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+
+// Repositories (Scoped - для единого контекста на HTTP-запрос)
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
+// Services (Scoped)
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 //    
 builder.Services.AddDbContext<ShopDbContext>(options =>
